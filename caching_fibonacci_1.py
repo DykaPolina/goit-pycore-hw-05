@@ -9,7 +9,6 @@ def caching_fibonacci() -> Callable[[int], int]:
     cache: dict[int, int] = {}
 
     def fibonacci(n: int) -> int:
-        # Validate input
         if not isinstance(n, int):
             raise ValueError("Input must be an integer.")
         if n < 0:
