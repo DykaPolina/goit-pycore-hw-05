@@ -1,6 +1,6 @@
 import sys
 from typing import List, Dict
-from collections import defaultdict
+from collections import Counter
 
 
 def parse_log_line(line: str) -> dict:
@@ -31,10 +31,7 @@ def load_logs(file_path: str) -> List[dict]:
     logs = []
     try:
         with open(file_path, encoding="utf-8") as file:
-            for line in file:
-                parsed = parse_log_line(line)
-                if parsed:
-                    logs.append(parsed)
+            return list(filter(None, map(parse_log_line, file)))
     except FileNotFoundError:
         print(f"[ERROR] File not found: {file_path}")
     except Exception as e:
@@ -55,18 +52,7 @@ def filter_logs_by_level(logs: List[dict], level: str) -> List[dict]:
 
 
 def count_logs_by_level(logs: List[dict]) -> Dict[str, int]:
-    """
-    Counts logs by their level.
-
-    :param logs: List of log entries.
-    :return: Dictionary with log levels as keys and their counts as values.
-    """
-    counts = defaultdict(int)
-    for log in logs:
-        level = log.get("level")
-        if level:
-            counts[level] += 1
-    return dict(counts)
+    return dict(Counter(log["level"] for log in logs if log.get("level")))
 
 
 def display_log_counts(counts: dict) -> None:
